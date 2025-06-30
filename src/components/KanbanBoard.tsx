@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, KeyboardSensor, PointerSensor, closestCenter, useSensor, useSensors } from "@dnd-kit/core";
+import { useState, useEffect } from "react";
+import { DndContext, DragEndEvent, DragOverlay, DragStartEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { SortableContext, arrayMove, horizontalListSortingStrategy } from "@dnd-kit/sortable";
 import KanbanColumn from "./KanbanColumn";
 import { FinanceGroup, FinanceItem } from "@/types/finance";
@@ -10,11 +10,9 @@ import ManageTagsModal from "./ManageTagsModal";
 
 export default function KanbanBoard() {
   const [groups, setGroups] = useState<FinanceGroup[]>([]);
-  const [activeElement, setActiveElement] = useState<{type: 'COLUMN' | 'ITEM', data: any} | null>(null);
+  const [activeElement, setActiveElement] = useState<{type: 'COLUMN' | 'ITEM', data: FinanceGroup | FinanceItem} | null>(null);
   
-  const [showColumnForm, setShowColumnForm] = useState(false);
-  const [newGroupName, setNewGroupName] = useState("");
-  const [newGroupColor, setNewGroupColor] = useState("#6366f1");
+  const [, setShowColumnForm] = useState(false);
 
   const [editingTagsForItem, setEditingTagsForItem] = useState<FinanceItem | null>(null);
 
@@ -77,9 +75,6 @@ export default function KanbanBoard() {
     }
   };
   
-  const handleAddGroup = async () => { /* ... sua função handleAddGroup ... */ };
-
-
   return (
     <div className="min-h-screen bg-gray-100 font-sans">
       <header className="flex justify-between items-center p-4 border-b bg-white sticky top-0 z-20">
@@ -100,23 +95,21 @@ export default function KanbanBoard() {
           </div>
           
           <DragOverlay>
-            {activeElement?.type === 'COLUMN' && <KanbanColumn group={activeElement.data} onItemCreated={fetchGroups} onEditTags={setEditingTagsForItem} />}
-            {activeElement?.type === 'ITEM' && <FinanceCard item={activeElement.data} onItemDeleted={fetchGroups} onEditTags={setEditingTagsForItem}/>}
+            {activeElement?.type === 'COLUMN' && <KanbanColumn group={activeElement.data as FinanceGroup} onItemCreated={fetchGroups} onEditTags={setEditingTagsForItem} />}
+            {activeElement?.type === 'ITEM' && <FinanceCard item={activeElement.data as FinanceItem} onItemDeleted={fetchGroups} onEditTags={setEditingTagsForItem}/>}
           </DragOverlay>
         </DndContext>
       </main>
 
-      {/* Modal para gerenciar tags */}
       <ManageTagsModal 
         item={editingTagsForItem} 
         onClose={() => setEditingTagsForItem(null)}
         onTagsUpdated={() => {
-            fetchGroups(); // Recarrega os dados para mostrar as tags atualizadas
-            setEditingTagsForItem(prev => prev ? { ...prev, tags: [] } : null); // Atualiza o estado do modal
+            fetchGroups();
+            setEditingTagsForItem(prev => prev ? { ...prev, tags: [] } : null);
         }}
       />
       
-      {/* Modal para adicionar coluna... */}
     </div>
   );
 }

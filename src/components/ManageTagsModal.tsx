@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { FinanceItem, Tag } from '@/types/finance';
+import { useState } from 'react';
+import { FinanceItem } from '@/types/finance';
 import { X, Plus } from 'lucide-react';
 
 interface ManageTagsModalProps {
@@ -37,9 +37,8 @@ export default function ManageTagsModal({ item, onClose, onTagsUpdated }: Manage
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50" onClick={onClose}>
       <div className="bg-white rounded-2xl shadow-xl p-6 w-full max-w-md space-y-4" onClick={(e) => e.stopPropagation()}>
-        <h2 className="text-xl font-bold text-gray-900">Gerenciar Tags para "{item.nome}"</h2>
+        <h2 className="text-xl font-bold text-gray-900">{`Gerenciar Tags para "${item.nome}"`}</h2>
         
-        {/* Lista de tags existentes */}
         <div className="space-y-2">
           {item.tags.map(tag => (
             <div key={tag.id} className="flex justify-between items-center bg-gray-100 p-2 rounded-lg">
@@ -52,7 +51,6 @@ export default function ManageTagsModal({ item, onClose, onTagsUpdated }: Manage
           {item.tags.length === 0 && <p className="text-sm text-gray-500">Nenhuma tag adicionada.</p>}
         </div>
 
-        {/* Formulário para adicionar nova tag */}
         <div className="pt-4 border-t space-y-2">
           <h3 className="text-md font-semibold text-gray-800">Nova Tag</h3>
           <div className="flex gap-2">
