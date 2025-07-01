@@ -10,17 +10,15 @@ export interface FinanceItem {
     valor: number;
     data: string;
     recorrente: boolean;
-    financeGroupId: string;
-    tags: Tag[]; // Adicionado
+    ordem: number;
+    tags: Tag[];
 }
 
 export interface FinanceGroup {
     id: string;
     nome: string;
     cor: string;
-    ordem: number; // Adicionado
-    valorTotal: number;
-    totalEntrada: number;
-    totalGasto: number;
+    ordem: number;
+    entrada: boolean;
     itens: FinanceItem[];
 }

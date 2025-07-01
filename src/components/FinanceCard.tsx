@@ -8,7 +8,8 @@ import { FinanceItem } from '@/types/finance';
 interface FinanceCardProps {
   item: FinanceItem;
   onItemDeleted: () => void;
-  onEditTags: (item: FinanceItem) => void; // NOVO: Callback para abrir o modal de tags
+  onEditTags: (item: FinanceItem) => void;
+  isIncome: boolean;
 }
 
 export default function FinanceCard({ item, onItemDeleted, onEditTags }: FinanceCardProps) {
@@ -36,34 +37,29 @@ export default function FinanceCard({ item, onItemDeleted, onEditTags }: Finance
     onEditTags(item);
   };
 
-  const typeInfo = item.recorrente 
-    ? { text: 'Entrada', color: 'text-green-600', bgColor: 'bg-green-100' }
-    : { text: 'Gasto', color: 'text-red-600', bgColor: 'bg-red-100' };
-
   return (
     <div
       ref={setNodeRef}
       style={style}
       {...attributes}
       {...listeners}
-      className="bg-white rounded-md p-3 shadow-sm border border-gray-200/80 cursor-grab group touch-none"
+      className="bg-white dark:bg-zinc-900/50 rounded-md p-3 shadow-sm border border-gray-200/80 dark:border-zinc-700/50 cursor-grab group touch-none"
     >
       <div className="flex justify-between items-start">
-        <h4 className="font-medium text-sm text-gray-800">{item.nome}</h4>
+        <h4 className="font-medium text-sm text-gray-800 dark:text-gray-200">{item.nome}</h4>
         <button 
             onClick={handleDelete}
-            className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 hover:text-red-500"
+            className="opacity-0 group-hover:opacity-100 transition-opacity text-gray-400 dark:text-gray-500 hover:text-red-500"
         >
           <Trash2 size={16} />
         </button>
       </div>
 
-      <div className="mt-2 space-y-1.5 text-xs text-gray-600">
-        <div className="flex items-center gap-2"><DollarSign size={14} className={typeInfo.color} /><span>R$ {item.valor.toFixed(2)}</span></div>
-        <div className="flex items-center gap-2"><Calendar size={14} /><span>{formatDate(item.data)}</span></div>
+      <div className="mt-2 space-y-1.5 text-xs text-gray-600 dark:text-gray-400">
+        <div suppressHydrationWarning className="flex items-center gap-2"><DollarSign size={14} className={item.recorrente ? 'text-green-500' : 'text-red-500'} /><span>R$ {item.valor.toFixed(2)}</span></div>
+        <div suppressHydrationWarning className="flex items-center gap-2"><Calendar size={14} /><span>{formatDate(item.data)}</span></div>
       </div>
       
-      {/* Seção de Tags */}
       <div className="flex justify-between items-end mt-3">
         <div className="flex items-center gap-1.5 flex-wrap">
           {item.tags.map(tag => (
